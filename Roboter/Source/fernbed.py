@@ -44,7 +44,7 @@ def getStatus():
 		attemptFailed = 0
 		try:
 			reply.append(port.read(3))
-			command= reply[0][0]
+			command= reply[0][0] #asdasd
 		except():
 			attemptFailed = 1 
 			print "getStatusFailed"
