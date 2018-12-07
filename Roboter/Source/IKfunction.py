@@ -56,8 +56,8 @@ def newAutomatikbetrieb() :
 		MotorsReady = 0
 		currentPositions = readAllPositions();
 		k += 1
-		print currentPositions
-		print PositionToReach
+		print (currentPositions)
+		print (PositionToReach)
 		for i in xrange(0,18):
 			if abs(PositionToReach[i] - currentPositions[i]) < 5 or currentPositions[i] == 1:
 				MotorsReady += 1
@@ -68,7 +68,7 @@ def newAutomatikbetrieb() :
 			Gait(walkX=False, walkZ=True, backwards=False)
 			MoveIK(x,y,z,rotx,roty,rotz)
 			PositionToReach = getLastAngles()
-			print k
+			print (k)
 			k = 0
 		sleep(0.01)
 		j += 1
@@ -102,7 +102,7 @@ def Fernbedienungsbetrieb():
 					#stamp3 = time.time()
 					Gait(walkX=False, walkZ=True, backwards=False)
 					MoveIK(x,y,z,rotx,roty,rotz)
-					print "bewegung nach vorne"
+					print ("bewegung nach vorne")
 					#sleep(1) #Beaglebone ist mit print alleine Abgestuerzt
 				
 				if(command == "S" ):#and servos.getMovingStatus(4) == 0):
@@ -146,7 +146,7 @@ def servoErrorTest():
 		y += 1
 	
 	for x in xrange(1,19):
-	 	print "Fehleranzahl Servo " + str(x) + " = " + str(error[x])
+	 	print ("Fehleranzahl Servo " + str(x) + " = " + str(error[x]))
 	
 def readAllPositions(times=1):
 	#Liest die Positionen aller Servos "times"-mal aus und gibt durschnittliche Zeit und Fehlersumme zurueck.
@@ -179,18 +179,18 @@ def readAllPositions(times=1):
 					isPositions[k-1] = (-1)
 			i += 1
 		i=0
-	print "Anzahl an Leseversuchen" + str(o)
-	print "Fehler: " + str(j)
-	print "Durschnittliche Zeit: " + str(sumup/o)
+	print ("Anzahl an Leseversuchen" + str(o))
+	print ("Fehler: " + str(j))
+	print ("Durschnittliche Zeit: " + str(sumup/o))
 	return isPositions
 
 def ReadOnePosition(i=1):
 	#Liest die Position eines Servos und gibt sie aus.
 	try:
 		a = servos.readPosition(i)
-		print a
+		print (a)
 	except:
-		print "ReadOnePosition: failed"
+		print ("ReadOnePosition: failed")
 	
 
 def timeTillStopped(k):
@@ -222,7 +222,7 @@ def timeTillStopped(k):
 			if  isMoving:
 				break
 		delta = time.time() - start
-		print "Time till " +str(k)  + "Servo stopped: " + str(delta)
+		print ("Time till " +str(k)  + "Servo stopped: " + str(delta))
 	
 
 def Handbetrieb():

@@ -9,11 +9,11 @@ import time
 def ProgrammSelect():
 
 	while(1):
-		print "Hauptmenu"
-		print "Handbetrieb          = 1"
-		print "Automatikbetrieb     = 2"
-		print "Fernbedinungsbetrieb = 3"
-		print "Programm beenden = 0"
+		print ("Hauptmenu")
+		print ("Handbetrieb          = 1")
+		print ("Automatikbetrieb     = 2")
+		print ("Fernbedinungsbetrieb = 3")
+		print ("Programm beenden = 0")
 		programmSelect = raw_input("Welches Programm wollen Sie ausfuehren") 
 		if (programmSelect == "1"):
 			IKfunction.Handbetrieb();
