@@ -19,7 +19,7 @@ except:
 
 def ProgrammSelect():
 
-	while(1):
+	while 1:
 		print ("Hauptmenu")
 		print ("Handbetrieb          = 1")
 		print ("Automatikbetrieb     = 2")
@@ -29,26 +29,28 @@ def ProgrammSelect():
 			print ("blauen Ball finden = 5")
 		print ("Programm beenden = 0")
 
-		programmSelect = raw_input("Welches Programm wollen Sie ausfuehren") 
-		if (programmSelect == "1"):
-			IKfunction.Handbetrieb();
-		if (programmSelect == "2"):
-			IKfunction.newAutomatikbetrieb();
-		if (programmSelect == "3"):
-			IKfunction.Fernbedienungsbetrieb();
-		if (programmSelect == "4"):
+		programmSelect = raw_input("\nWelches Programm wollen Sie ausfuehren? \n")
+		if programmSelect == "1":
+			IKfunction.Handbetrieb()
+		if programmSelect == "2":
+			IKfunction.newAutomatikbetrieb()
+		if programmSelect == "3":
+			IKfunction.Fernbedienungsbetrieb()
+		if programmSelect == "4":
 			programmSelect = int(raw_input("Um wie viel Grad wollen Sie drehen? Rechtsrum positiv "))
 			IKfunction.turn(programmSelect)
-		if (programmSelect == "0"):
+		if programmSelect == "0":
 			if openCVEnabled:
 				IKcvfunction.destroyCV()
-			break;
+			break
 		if openCVEnabled:
-			if (programmSelect == "5"):
-				while(1):
+			if programmSelect == "5":
+				while 1:
 					print ("go")
 					obj = IKcvfunction.findObjectFromColor(preset='blue')
 					if obj is not None:
 						IKcvfunction.faceObject(obj)
 						obj = None
+
+
 ProgrammSelect()

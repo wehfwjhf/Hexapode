@@ -22,7 +22,7 @@ def newAutomatikbetrieb() :
 	k=0
 	while(getStatus()  != "1"):
 		MotorsReady = 0
-		currentPositions = readAllPositions();
+		currentPositions = readAllPositions()
 		k += 1
 		print (currentPositions)
 		print (PositionToReach)
@@ -46,27 +46,27 @@ def Fernbedienungsbetrieb():
 	#Entspricht dem Handbetrieb ueber Konsole, jedoch mit geringerem
 	#Funktionsumfang und Ansteuerung ueber die Fernbedienung.
 	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
-	freeToMove = 0;
+	freeToMove = 0
 	oldCommand = 'N'
-	stamp=time.time();
-	while(True):
-		stamp2 = time.time();
-		if (stamp2 - stamp)*1000  >= 50:
+	stamp=time.time()
+	while True:
+		stamp2 = time.time()
+		if stamp2 - stamp*1000  >= 50:
 			#stamp5 = time.time()
-			stamp = time.time();
+			stamp = time.time()
 			#print "attempting to read"
-			command = getStatus();
-			if(command == ' '):
-				command = oldCommand;  
+			command = getStatus()
+			if command == ' ':
+				command = oldCommand
 			oldCommand = command
-			freeToMove = 1;
+			freeToMove = 1
 			#print str((time.time()-stamp)*1000)
 		else:
 			
-			if(freeToMove == 1 ):
+			if freeToMove == 1 :
 				stamp3 = 0
-				freeToMove = 0;
-				if(command == "W" ):#and servos.getMovingStatus(4) == 0):
+				freeToMove = 0
+				if command == "W" :#and servos.getMovingStatus(4) == 0):
 					#stamp3 = time.time()
 					Gait(phi=0)
 					MoveIK(x,y,z,rotx,roty,rotz)
@@ -85,9 +85,9 @@ def Fernbedienungsbetrieb():
 					stamp3 = time.time()
 					Gait(phi=90)
 					MoveIK(x,y,z,rotx,roty,rotz)
-				if(command == "1" ):#and servos.getMovingStatus(4) == 0):
-					break;
-				if(command == "L" ):#and servos.getMovingStatus(4) == 0):
+				if command == "1" :#and servos.getMovingStatus(4) == 0):
+					break
+				if command == "L" :#and servos.getMovingStatus(4) == 0):
 					oldCommand = "N"
 					gegenstand = packen()
 					if gegenstand == 1:
@@ -114,13 +114,13 @@ def servoErrorTest():
 		y += 1
 	
 	for x in xrange(1,19):
-	 	print ("Fehleranzahl Servo " + str(x) + " = " + str(error[x]))
+	 	print ("Fehleranzahl Servo" + str(x) + " = " + str(error[x]))
 	
 def readAllPositions(times=1):
 	#Liest die Positionen aller Servos "times"-mal aus und gibt durschnittliche Zeit und Fehlersumme zurueck.
 	#(Dient hauptsaechlich der statistischen Auswertung von Fehlersumme und Befehlszeit)
-	i=1;
-	j=0;
+	i=1
+	j=0
 	k=0
 	o=0
 	isPositions = [None]*18
@@ -143,7 +143,7 @@ def readAllPositions(times=1):
 			
 			except:
 				j += 1
-				if isPositions[k-1] == None:
+				if isPositions[k-1] is None:
 					isPositions[k-1] = (-1)
 			i += 1
 		i=0
@@ -173,14 +173,14 @@ def timeTillStopped(k):
 		roty = 0
 		rotz = 0
 
-		zeroGait();
+		zeroGait()
 		MoveIK(x,y,z,rotx,roty,rotz)
 		sleep(0.5)
 			
 		start = time.time()
 		Gait(phi=0)
 		MoveIK(x,y,z,rotx,roty,rotz)
-		isMoving = 1;
+		isMoving = 1
 		while True:
 			try:
 				isMoving = servos.readMovingStatus(k)
@@ -200,7 +200,7 @@ def Handbetrieb():
 	stdscr = curses.initscr()
 	curses.cbreak()
 	stdscr.keypad(1)
-	stdscr.addstr(0,10, "Quit with b")
+	stdscr.addstr(0,10, "\nQuit with b \n")
 	stdscr.addstr('W A S D Q E UP DOWN LEFT RIGHT')
 	stdscr.refresh()
 	add = 3

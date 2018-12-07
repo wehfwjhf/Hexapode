@@ -24,24 +24,24 @@ button=[0,0,0,0,0,0,0,0]
 
 def lesen():
 	reply = []
-	port.flushInput();
+	port.flushInput()
 	while True:
-		if(ord(port.read(1)) == 255):
-			break;
+		if ord(port.read(1)) == 255:
+			break
 	sleep(0.0001)
 	for j in xrange (7):		
 		reply.append(ord(port.read(1)))
 
 	#print str((reply[0])) + " " + str((reply[1])) + " " +  str((reply[2])) + " " +  str((reply[3])) + " " +  str((reply[4])) + " " +  str((reply[5])) + " " +  str((reply[6])) 
-	return reply;
+	return reply
 
 def getStatus():
 	command = 'N'
-	attemptFailed = 1;
+	attemptFailed = 1
 	reply = []
-	if (port.inWaiting()>0):
+	if port.inWaiting()>0:
 		
-		attemptFailed = 0;
+		attemptFailed = 0
 		try:
 			reply.append(port.read(3))
 			command= reply[0][0]
@@ -58,8 +58,8 @@ def getStatus():
 	return command
 
 def getRightStick():
-	global rightStick;
-	return rightStick;
+	global rightStick
+	return rightStick
 #lesen()
 #getStatus();
 #print "rightStick: "+str(rightStick)
