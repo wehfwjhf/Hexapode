@@ -1,3 +1,4 @@
+# coding: utf-8
 #Thassilo Bücker, Alexander Orzol, Frederick Mueller, Moritz Kolb
 #Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
 
@@ -11,39 +12,6 @@ import curses
 from IK import *
 servos = Ax12()
 
-'''
-#alt/obsolet
-def Automatikbetrieb():
-	global lastAngles	
-	global cGaitXZ
-	global cSyncSpeed
-	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
-	cSyncSpeed = False
-	counterError = 0
-	counterReading = 0
-	for i in xrange(100):
-		isPosition = lastAngles[1]	
-		start = time.time(); 
-		while (abs(isPosition - cGaitXZ[1])>1):
-			try: 
-				counterReading += 1
-				isPositon = servos.readPosition(1)
-			except:
-				print "error"
-				counterError += 1
-				sleep(0.01)
-		end = time.time()
-		print (end - start)
-		#end=time.time()
-		#print(end-start)
-		#start = time.time()
-		Gait(walkX=False, walkZ=True, backwards=False)
-		MoveIK(x,y,z,rotx,roty,rotz)
-		sleep(0.01)
-		i += 1;
-	print counterReading
-	print counterError
-'''
 
 def newAutomatikbetrieb() :
 	#Automatische Vorwaertsbewegung mit Pruefung ob mindestens 10 Servos die Zielposition
@@ -65,7 +33,7 @@ def newAutomatikbetrieb() :
 			
 				 
 		if(MotorsReady >= 10):
-			Gait(walkX=False, walkZ=True, backwards=False)
+			Gait(phi=0)
 			MoveIK(x,y,z,rotx,roty,rotz)
 			PositionToReach = getLastAngles()
 			print (k)
@@ -100,22 +68,22 @@ def Fernbedienungsbetrieb():
 				freeToMove = 0;
 				if(command == "W" ):#and servos.getMovingStatus(4) == 0):
 					#stamp3 = time.time()
-					Gait(walkX=False, walkZ=True, backwards=False)
+					Gait(phi=0)
 					MoveIK(x,y,z,rotx,roty,rotz)
 					print ("bewegung nach vorne")
 					#sleep(1) #Beaglebone ist mit print alleine Abgestuerzt
 				
 				if(command == "S" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
-					Gait(walkX=False, walkZ=True, backwards=True)
+					Gait(phi=180)
 					MoveIK(x,y,z,rotx,roty,rotz)
 				if(command == "A" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
-					Gait(walkX=True, walkZ=False, backwards=True)
+					Gait(phi=270)
 					MoveIK(x,y,z,rotx,roty,rotz)
 				if(command == "D" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
-					Gait(walkX=True, walkZ=False, backwards=False)
+					Gait(phi=90)
 					MoveIK(x,y,z,rotx,roty,rotz)
 				if(command == "1" ):#and servos.getMovingStatus(4) == 0):
 					break;
@@ -210,7 +178,7 @@ def timeTillStopped(k):
 		sleep(0.5)
 			
 		start = time.time()
-		Gait(walkX=False, walkZ=True, backwards=False)
+		Gait(phi=0)
 		MoveIK(x,y,z,rotx,roty,rotz)
 		isMoving = 1;
 		while True:
@@ -228,16 +196,15 @@ def timeTillStopped(k):
 def Handbetrieb():
 	#Steuerung ueber Tastatur aus der Konsole heraus. Nur senden von Befehlen, keine Kontrolle der Ausfuehrung
 	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
-	ArrayTravelDistance = 1
 	cSyncSpeed = True	
 	stdscr = curses.initscr()
 	curses.cbreak()
 	stdscr.keypad(1)
-	WalkingSpeed = 200	
 	stdscr.addstr(0,10, "Quit with b")
 	stdscr.addstr('W A S D Q E UP DOWN LEFT RIGHT')
 	stdscr.refresh()
 	add = 3
+	InitPosition()
 
 	key = ''
 	while key != ord('b'):
@@ -245,22 +212,22 @@ def Handbetrieb():
 		
 		if key == ord('w'):
 			z = z - add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('a'):
 			x = x + add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('s'):
 			z = z + add	
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('d'):
 			x = x - add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('q'):
 			y = y + add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('e'):
 			y = y - add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('i'):
 			x = 0
 			y = 0
@@ -268,56 +235,64 @@ def Handbetrieb():
 			rotx = 0
 			roty = 0
 			rotz = 0
-			zeroGait();
+			zeroGait()
 			MoveIK()
 		elif key == ord('r'):
 			rotx = rotx + add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('f'):
 			rotx = rotx - add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('t'):
 			roty = roty + add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('g'):
 			roty = roty - add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('z'):
 			rotz = rotz + add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK (x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == ord('h'):
 			rotz = rotz - add
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
+		elif key == ord('o'):
+			Gait(phi=0,move=False,turn=True)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
+		elif key == ord('p'):
+			Gait(phi=0,move=False,turn=True, turnDirection=True)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 		elif key == curses.KEY_UP:# or rightStick == 'W':
-			Gait(walkX=False, walkZ=True, backwards=False, cArrayTravelDistance=ArrayTravelDistance)
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			Gait(phi=0)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 			#sleep(0.03)
 		elif key == curses.KEY_DOWN:
-			Gait(walkX=False, walkZ=True, backwards=True, cArrayTravelDistance=ArrayTravelDistance)
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			Gait(phi=180)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 			#sleep(0.03)
 		elif key == curses.KEY_RIGHT:
-			Gait(walkX=True, walkZ=False, backwards=False, cArrayTravelDistance=ArrayTravelDistance)
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			Gait(phi=90)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 			#sleep(0.03)
 		elif key == curses.KEY_LEFT:
-			Gait(walkX=True, walkZ=False, backwards=True, cArrayTravelDistance=ArrayTravelDistance)
-			MoveIK(x,y,z,rotx,roty,rotz,WalkingSpeed,cSyncSpeed)
+			Gait(phi=270)
+			MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
 			#sleep(0.03)
+		'''
 		elif key == ord('y'):
 			if cArrayTravelDistance < 5 :
-				cArrayTravelDistance += 1
+				cArrayTravelDistance += 1 # TODO: Das hier funktioniert nicht mehr, da cArrayTravelDistance nach IK.py verlegt. sinnvoll?
 		
 		elif key == ord('x'):
 			if cArrayTravelDistance > 1:
-				cArrayTravelDistance -= 1
+				cArrayTravelDistance -= 1 # TODO: Das hier funktioniert nicht mehr, da cArrayTravelDistance nach IK.py verlegt. sinnvoll?
+		'''
 	curses.endwin()
 
 def Init2():
 	#Initialisierung der Basisfunktionen sowie Bewegung in Initialposition.
 	Init()
 	InitPosition()
-	print "Init done."
+	print ("Init done.")
 
 def InitPosition():
 	#Bewegung in Initialposition
@@ -328,6 +303,31 @@ def InitPosition():
 	rotx = 0
 	roty = 0
 	rotz = 0
-	zeroGait();
+	zeroGait()
 	MoveIK(x,y,z,rotx,roty,rotz)
 	sleep(1)
+
+def turn(phi=0):
+	#Funktion für das Drehen des gesamten Hexapoden um einen vorgegebenen Winkel.
+	#direction=False - Rechtsrum
+	#TODO: Funktioniert bisher nur gut für große Winkel (>20°)
+	#Experimentell
+	#(40 = Testwert TravelLengthX/Z, 96 = Testwert cStepAmount, 250/93 = Faktor basierend auf Messung Schritte pro Grad)
+
+	#Die Einstellungsmöglichkeiten via Variablen sorgen hier für extreme Verlangsamung.
+	#phi = phi.astype('int64') #nur notwendig für Berechnung mit Variablen
+	#turnStepAmount = np.round((abs(phi)*250*cStepAmount*40*40)/(93*96*cGaitTravelLengthX*cGaitTravelLengthZ)).astype("int") #TODO zu testen
+
+	#Gekürzte Fassung für Experimentelle Werte s.o.
+	if (phi < 0):
+		direction = True
+	else:
+		direction = False
+
+	turnStepAmount = np.round((abs(phi)*250)/93).astype("int") 
+
+	print (turnStepAmount)
+	for i in xrange(0,turnStepAmount,1):
+		Gait(phi=0,move=False,turn=True, turnDirection=direction)
+		MoveIK(x,y,z,rotx,roty,rotz,cWalkingSpeed,cSyncSpeed)
+	InitPosition()

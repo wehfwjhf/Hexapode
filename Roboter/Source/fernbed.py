@@ -1,3 +1,4 @@
+# coding: utf-8
 #Thassilo Bücker, Alexander Orzol, Frederick Mueller
 #Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
 
@@ -6,6 +7,9 @@
 #----------imports--------------
 from time import sleep
 import serial
+import Adafruit_BBIO.UART as UART
+
+UART.setup("UART1")
 port = serial.Serial("/dev/ttyO1", baudrate=9600, timeout=0.1)
 
 #----------Variablen-----------

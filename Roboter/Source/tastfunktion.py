@@ -1,3 +1,4 @@
+# coding: utf-8
 #Thassilo Bücker, Alexander Orzol
 #Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
 
@@ -23,7 +24,7 @@ def Inittasten():
 			try:
 				servos.move(i+1,start[i])
 			except:
-				print "Servo move failed"
+				print ("Servo move failed")
 				i -= 1
 
 def Vorderbeinefuehlen():
@@ -35,7 +36,7 @@ def Vorderbeinefuehlen():
 
 			servos.move(i+1,start[i])
 		except:
-			print "Servos move failed"	
+			print ("Servos move failed")
 	load = 0
 	for i in reversed(xrange(525,767,4)):
 		if load > 1000 or load < 60:
@@ -46,14 +47,14 @@ def Vorderbeinefuehlen():
 				load = servos.readLoad(4)
 			except:
 				i+=1
-			print "|" +str(i) + "|" + str(load) + "\n"
+			print ("|" +str(i) + "|" + str(load) + "\n")
 		else:
-			print "Gegestand erkannt"
+			print ("Gegestand erkannt")
 			break
 	try:
 		servos.move(4,767)
 	except:
-		print "Servos move failed"
+		print ("Servos move failed")
 	load = 0	
 	for i in xrange(255,490,4):
 		if load < 1050:
@@ -64,14 +65,14 @@ def Vorderbeinefuehlen():
 				load = servos.readLoad(3)
 			except:
 				i-=1
-			print "|" +str(i) + "|" + str(load) + "\n"
+			print ("|" +str(i) + "|" + str(load) + "\n")
 		else:
-			print "Gegenstand erkannt"
+			print ("Gegenstand erkannt")
 			break
 	try:
 		servos.move(3,255)
 	except:
-		print "Servos move failed"
+		print ("Servos move failed")
 
 def packen():
 	#mit den Vorderbeinen wird versucht ein Gegenstand zu packen
@@ -85,7 +86,7 @@ def packen():
 		try:
 			servos.move(i+1,start[i])
 		except:
-			print "Servo move failed"
+			print ("Servo move failed")
 			
 	load = 0
 	load1 = 0
@@ -102,16 +103,16 @@ def packen():
 				load1 = servos.readLoad(2)
 			except:
 				i+=1
-			print  "|1|" +str(i) + "|" + str(load) + " |2|" +str(512+abs(512-i)) + "|" + str(load1)
+			print  ("|1|" +str(i) + "|" + str(load) + " |2|" +str(512+abs(512-i)) + "|" + str(load1))
 		else:
-			print "Gegestand erkannt"
+			print ("Gegestand erkannt")
 			gegenstand = 1
 			break
 	try:
 		servos.move(3,255)
 		servos.move(4,767)
 	except:
-		print "Servo move failed"
+		print ("Servo move failed")
 	return gegenstand
 
 def werfen():
@@ -127,5 +128,5 @@ def werfen():
 		servos.moveSpeed(5,767,200)
 		servos.moveSpeed(6,255,200)	
 	except:
-		print "werfen failed"
+		print ("werfen failed")
 #Inittasten()

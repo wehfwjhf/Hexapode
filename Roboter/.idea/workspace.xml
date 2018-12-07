@@ -2,9 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="21cee2ab-24d3-4163-b650-a313c7651784" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Roboter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Roboter.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/IK.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/IK.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/IKfunction.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/IKfunction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ax12.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ax12.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/fernbed.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/fernbed.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/tastfunktion.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/tastfunktion.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,7 +19,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Roboter$main.coverage" NAME="main Coverage Results" MODIFIED="1544178796148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Source" />
+    <SUITE FILE_PATH="coverage/Roboter$main.coverage" NAME="main Coverage Results" MODIFIED="1544184149923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Source" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-802350775">
@@ -27,22 +33,24 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="3" />
+          <entry key="py" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="3" />
+          <entry key="Python" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="40" />
+          <entry key="py" value="139" />
+          <entry key="txt" value="43" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="40" />
+          <entry key="PLAIN_TEXT" value="43" />
+          <entry key="Python" value="139" />
         </counts>
       </usages-collector>
     </session>
@@ -52,31 +60,50 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Source/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
+            <state relative-caret-position="782">
+              <caret line="46" column="39" selection-start-line="46" selection-start-column="39" selection-end-line="46" selection-end-column="39" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Source/IKfunction.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="226" lean-forward="true" selection-start-line="226" selection-end-line="226" />
+            <state relative-caret-position="351">
+              <caret line="328" column="26" selection-start-line="328" selection-start-column="26" selection-end-line="328" selection-end-column="26" />
               <folding>
-                <element signature="e#285#311#0" expanded="true" />
-                <marker date="1544178815066" expanded="true" signature="4140:4142" ph="..." />
-                <marker date="1544178815066" expanded="true" signature="5157:5159" ph="..." />
+                <element signature="e#301#327#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
+        <entry file="file://$PROJECT_DIR$/Source/tastfunktion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="514">
+              <caret line="130" column="31" selection-start-line="130" selection-start-column="31" selection-end-line="130" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Source/ax12.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="74" lean-forward="true" selection-start-line="13" selection-start-column="74" selection-end-line="13" selection-end-column="74" />
+              <folding>
+                <element signature="e#500#522#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Source/fernbed.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="9" selection-start-line="9" selection-end-line="11" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -86,11 +113,17 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Source/ax12.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Source/main.py" />
         <option value="$PROJECT_DIR$/Source/IKfunction.py" />
+        <option value="$PROJECT_DIR$/Source/tastfunktion.py" />
+        <option value="$PROJECT_DIR$/Source/fernbed.py" />
+        <option value="$PROJECT_DIR$/Source/ax12.py" />
       </list>
     </option>
   </component>
@@ -128,6 +161,11 @@
               <item name="Roboter" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
+            <path>
+              <item name="Roboter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Remote Python 2.7.3 (sftp://root@192.168.178.33:22/usr/bin/python) &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -144,7 +182,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -198,24 +236,31 @@
       <option name="presentableId" value="Default" />
       <updated>1544176847906</updated>
     </task>
+    <task id="LOCAL-00001" summary="added brackets for print commands">
+      <created>1544178852836</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1544178852836</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16791044" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" />
+      <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" />
       <window_info anchor="bottom" id="File Transfer" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="11" />
@@ -271,14 +316,11 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added brackets for print commands" />
+    <option name="LAST_COMMIT_MESSAGE" value="added brackets for print commands" />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Source/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -286,14 +328,57 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Source/IKcvfunction.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="12" column="10" lean-forward="true" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Source/IKfunction.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="226" lean-forward="true" selection-start-line="226" selection-end-line="226" />
+        <state relative-caret-position="351">
+          <caret line="328" column="26" selection-start-line="328" selection-start-column="26" selection-end-line="328" selection-end-column="26" />
           <folding>
-            <element signature="e#285#311#0" expanded="true" />
-            <marker date="1544178815066" expanded="true" signature="4140:4142" ph="..." />
-            <marker date="1544178815066" expanded="true" signature="5157:5159" ph="..." />
+            <element signature="e#301#327#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Source/tastfunktion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="130" column="31" selection-start-line="130" selection-start-column="31" selection-end-line="130" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Source/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="39" selection-start-line="46" selection-start-column="39" selection-end-line="46" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Source/fernbed.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" selection-start-line="9" selection-end-line="11" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/remote_sources/984127874/-1227933812/serial/serialutil.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="281" selection-start-line="281" selection-end-line="281" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Source/ax12.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="74" lean-forward="true" selection-start-line="13" selection-start-column="74" selection-end-line="13" selection-end-column="74" />
+          <folding>
+            <element signature="e#500#522#0" expanded="true" />
           </folding>
         </state>
       </provider>

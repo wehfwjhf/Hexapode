@@ -1,9 +1,9 @@
+# coding: utf-8
 #Thassilo Bücker, Alexander Orzol, Frederick Mueller, Moritz Kolb
 #Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
 
 #Enthaelt alle Basisfunktionen und die Inverse Kinematik des Hexapoden
 
-# coding: utf-8
 ##### Config #########################
 # Debugmode
 cDebug = False
@@ -43,7 +43,7 @@ cRMLegNumber = 1
 cRFLegNumber = 2
 cLRLegNumber = 3
 cLMLegNumber = 4
-CLFLegNumber = 5
+cLFLegNumber = 5
 
 # Min/Max Winkel der Servos (experimentell)
 cXXCoxaMin = -700
@@ -185,18 +185,19 @@ cLFInitPosY = cHexInitY
 cLFInitPosZ = cHexInitXZ
 
 # Gait - maximum leg distance from initial position during movement
-cGaitTravelLengthX = 30
-cGaitTravelLengthZ = 30
+cGaitTravelLengthX = 40
+cGaitTravelLengthZ = 40
 cGaitTravelHeigth = -30
 
+cArrayTravelDistance = 1 #bisher nur für Drehung genutzt, genutzt um Schritte im Array zu überspringen.
 cStepAmount = 96 #Menge an Schritten pro Bewegungszyklus, nur vielfache von 12
-cWalkingSpeed = 100 #Bewegungsgeschwindigkeit der Servos
+cWalkingSpeed = 200 #Bewegungsgeschwindigkeit der Servos
 cSyncSpeed = False #Bewegungsgeschwindigkeit gleich für alle Servos
 
 #lastca = [512, 512, 512, 512, 512, 512]
 #lastfa = [644, 656, 644, 378, 366, 378]
 #lastta = [295, 257, 295, 727, 767, 727]
-lastAngles = [512, 512, 377, 647, 728, 296, 512, 512, 377, 647, 728, 296, 512, 512, 365, 659, 767, 257] #Initialposition
+lastAngles = [512, 512, 647, 647, 296, 296, 512, 512, 647, 647, 296, 296, 512, 512, 647, 647, 296, 296] #Initialposition
 
 ##################################################################
 ##### End Config ##### Don't change anything below this line #####
@@ -276,6 +277,7 @@ def Init():
 		GaitXZ[:,i] = np.roll(cGaitXZ, cGaitLeg[i]*(cStepAmount/6), axis=0)
 		GaitY[:,i] = np.roll(cGaitY, cGaitLeg[i]*(cStepAmount/6), axis=0)
 
+
 def LegIK(LegIKPosX, LegIKPosY, LegIKPosZ, LegIKLeg, transformation=True):
 	#[LEG INVERSE KINEMATICS] Calculates the angles of the coxa, femur and tibia for the given position of the feet
 	#IKFeetPosX				- Input position of the Feet X
@@ -334,11 +336,13 @@ def LegIK(LegIKPosX, LegIKPosY, LegIKPosZ, LegIKLeg, transformation=True):
  		#IKSolutionError = True
 		#return IKSolutionError, None, None, None
 
+	'''
+	#Kann genutzt werden, falls auf einer Seite die Servos andersrum montiert sind.
 	if LegIKLeg > 2:	# Servos sind alle andersrum montiert
 		#CoxaAngle = 180 - CoxaAngle
 		FemurAngle = 180 - FemurAngle
 		TibiaAngle = 180 - TibiaAngle
-	
+	'''
 
 	if cDebug:
 		print '### LegIK() ### ' + str(LegIKLeg)
@@ -413,35 +417,63 @@ def DegreeToServo(angle):
 		print 'DegreeToServo() ' + str(value)
 
 	return int(value)
-
-def Gait(walkX=True, walkZ=False, backwards=False, move = True, cArrayTravelDistance=1):
+	
+def Gait(phi=0.0, move=True, turn=False, turnDirection=False):
 	#Berechnung der Gangart durch Rollen der Gait-Arrays
+	#Für turn=True werden die Beine der beiden Seiten entgegengesetzt bewegt
+	#Für turnDirection=True wird linksrum, statt rechtsrum gedreht
 	global GaitXZ, GaitY, GaitPosX, GaitPosY, GaitPosZ, roll
-	if move:
-		if (backwards):
+	phi = phi*(np.pi/180.0)
+	if (phi < 0):
+		phi = -(abs(phi)%360)
+	else:
+		phi = abs(phi)%360
+
+	if move and turn or not move and not turn:
+		print "fehlerhafter Methodenaufruf Gait"
+	if move and not turn:
+		if (phi > 90.0 and phi < 270.0): #rückwärts
 			GaitXZ = np.roll(GaitXZ, cArrayTravelDistance, axis=0)
 			GaitY = np.roll(GaitY, cArrayTravelDistance, axis=0)
 			roll -= 1*cArrayTravelDistance
-		else:
+		else: #vorwärts
 			GaitXZ = np.roll(GaitXZ, -cArrayTravelDistance, axis=0)
 			GaitY = np.roll(GaitY, -cArrayTravelDistance, axis=0)
 			roll += 1*cArrayTravelDistance
-
-	if(walkZ):
+	
+	if turn and not move:
+		GaitXZ = np.roll(GaitXZ, cArrayTravelDistance, axis=0)
+		GaitY = np.roll(GaitY, cArrayTravelDistance, axis=0)
 		GaitPosZ = GaitXZ[0]*cGaitTravelLengthZ
-
+		if turnDirection:
+			GaitPosZ[0] = -GaitPosZ[0]
+			GaitPosZ[1] = -GaitPosZ[1]
+			GaitPosZ[2] = -GaitPosZ[2]
+		else:
+			GaitPosZ[3] = -GaitPosZ[3]
+			GaitPosZ[4] = -GaitPosZ[4]
+			GaitPosZ[5] = -GaitPosZ[5]
+		######
+		#TODO: Das hier "funktioniert", ist aber mathematisch nicht richtig (hier sinusbahn statt Kreisbahn, Sinuskreis-Bewegung teils falschrum?)
+		#Halbkreis ist: f(x)=sqrt(r²-x²)
+		GaitPosX[0] = GaitPosZ[0] 
+		GaitPosX[1] = -abs(GaitPosZ[1])/2
+		GaitPosX[2] = -GaitPosZ[2] 
+		GaitPosX[3] = -GaitPosZ[3] 
+		GaitPosX[4] = abs(GaitPosZ[4])/2
+		GaitPosX[5] = GaitPosZ[5]	
+		######	
 	else:
-		GaitPosZ = [0,0,0,0,0,0]
+		if (np.cos(phi) <= 0.0001 and np.cos(phi) >= -0.0001): #Vermeidung von extrem kleinen Zahlen, sonst bei 90° x*E-17 usw. (eventuell nicht notwendig)
+			GaitPosZ = 0*GaitXZ[0]
+		else:
+			GaitPosZ = np.cos(phi)*GaitXZ[0]*cGaitTravelLengthZ
 
-	if(walkX):
-		GaitPosX = GaitXZ[0]*cGaitTravelLengthX
-	else:
-		GaitPosX = [0,0,0,0,0,0]
-
-	if(walkX or walkZ):
-		GaitPosY = GaitY[0]*cGaitTravelHeigth
-	else:
-		GaitPosY = [0,0,0,0,0,0]
+		if (np.sin(phi) <= 0.0001 and np.sin(phi) >= -0.0001):
+			GaitPosX = 0*GaitXZ[0]
+		else:
+			GaitPosX = np.sin(phi)*GaitXZ[0]*cGaitTravelLengthX
+	GaitPosY = GaitY[0]*cGaitTravelHeigth
 
 def MoveIK(x=0,y=0,z=0,rotx=0,roty=0,rotz=0,maxSpeed=cWalkingSpeed,cSyncSpeed=False):
 	#Bewegung der Beine durch Verschiebung/Rotation des Koerpers
@@ -468,20 +500,14 @@ def MoveIK(x=0,y=0,z=0,rotx=0,roty=0,rotz=0,maxSpeed=cWalkingSpeed,cSyncSpeed=Fa
 			Distance[i] = abs(p[i]- lastAngles[i])
 		for i in xrange(18):
 			if(Distance[i] > 0):
-				#speed[i] = 5*int(np.around((Distance[i] / float( max(Distance))) * (maxSpeed/5)))
-				#speed[i] = int( (1-(1/np.exp(5*(Distance[i] / float( max(Distance)))))) * maxSpeed)
 				speed[i] = int((np.exp(3*(Distance[i] / float( max(Distance))/np.exp(3)))*maxSpeed))
-				#print speed[i]
 			else:
 				speed[i] = maxSpeed
 	else:
 		for i in xrange (18):
 			speed[i] = maxSpeed
-	#print "speed:",speed
-	#print "pos:",p
 	# Neue lastAngles
 	lastAngles = copy.deepcopy(p)
-
 	servos.moveSpeedSync(p, speed)
 
 def getLastAngles():
@@ -496,7 +522,3 @@ def zeroGait():
 	GaitXZ = np.roll(GaitXZ, roll, axis=0)
 	GaitY = np.roll(GaitY, roll, axis=0)
 	roll=0
-
-
-
-# Error counter beim lesen

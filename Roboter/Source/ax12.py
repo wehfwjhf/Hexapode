@@ -1,3 +1,4 @@
+# coding: utf-8
 '''
 Thassilo Bücker, Alexander Orzol, Frederick Mueller, Moritz Kolb
 Campus Velbert/Heiligenhaus, Hochschule Bochum, 2016/2017
@@ -16,6 +17,10 @@ from time import sleep
 import time
 import serial
 import Adafruit_BBIO.GPIO as GPIO
+import Adafruit_BBIO.UART as UART
+
+UART.setup("UART2")
+UART.setup("UART4")
 
 class Ax12:
     # important AX-12 constants
@@ -267,7 +272,7 @@ class Ax12:
             while True:
                 try:
                     reply.append(Ax12.port2.read(1)) # [0xff, 0xff, origin, length, error]
-                    print "error on reply:" + reply
+                    print ("error on reply:" + reply)
                     if (reply[-1] == ''):
                         raise
                 except:
@@ -278,7 +283,7 @@ class Ax12:
             length = ord(reply[4]) - 2
             error = ord(reply[5])
             if(error != 0):
-                print "Error from servo: " + Ax12.dictErrors[error] + ' (code  ' + hex(error) + ')'
+                print ("Error from servo: " + Ax12.dictErrors[error] + ' (code  ' + hex(error) + ')')
                 return -error
             elif(length == 0):
                 return error
@@ -288,7 +293,7 @@ class Ax12:
                 else:
                     returnValue = ord(reply[6])
                 return returnValue
-        except Exception, detail:
+        except (Exception, detail):
             raise Ax12.axError(detail)
 
     def ping(self,id):
@@ -311,7 +316,7 @@ class Ax12:
             sleep(Ax12.TX_DELAY_TIME)
             return self.readData(id)
         else:
-            print "nothing done, please send confirm = True as this fuction reset to the factory default value, i.e reset the motor ID"
+            print ("nothing done, please send confirm = True as this fuction reset to the factory default value, i.e reset the motor ID")
             return
 
     def setID(self, id, newId):
@@ -619,11 +624,11 @@ class Ax12:
             try :
                 temp = self.ping(i)
                 servoList.append(i)
-                if verbose: print "Found servo #" + str(i)
+                if verbose: print ("Found servo #" + str(i))
                 time.sleep(0.1)
 
-            except Exception, detail:
-                if verbose : print "Error pinging servo #" + str(i) + ': ' + str(detail)
+            except (Exception, detail):
+                if verbose : print ("Error pinging servo #" + str(i) + ': ' + str(detail))
                 pass
         return servoList
 
