@@ -150,13 +150,41 @@ void loop(){
   else {
 #endif
     Serial.print((byte)0xff);
-    Serial.print(F("xx"));
     for (i=0; i < NUMANALOGS; i++)  {
-      Serial.print((byte)g_abJoyVals[i]);
-      Serial.print(F("xx"));
+     Serial.print(F("x"));
+     if (g_abJoyVals[i] < 10)
+     {
+        Serial.print(F("00"));
+        Serial.print((byte)g_abJoyVals[i]);
+     }
+     else if (g_abJoyVals[i] < 100)
+     {
+        Serial.print(F("0"));
+        Serial.print((byte)g_abJoyVals[i]);
+     }
+     else
+     {
+        Serial.print((byte)g_abJoyVals[i]);
+     }
+
     }
-    Serial.print(F("xx"));
-    Serial.println((byte)g_bButtons);
+    Serial.print(F("x"));
+    
+     if (g_bButtons < 10)
+     {
+        Serial.print(F("00"));
+        Serial.println((byte)g_bButtons);
+     }
+     else if (g_bButtons < 100)
+     {
+        Serial.print(F("0"));
+        Serial.println((byte)g_bButtons);
+     }
+     else
+     {
+        Serial.println((byte)g_bButtons);
+     }
+
     //Serial.print((byte)0);        // extra
     //Serial.println((byte)bChksum);
 #ifdef DEBUG
