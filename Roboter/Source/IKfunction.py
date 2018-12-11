@@ -48,12 +48,15 @@ def Fernbedienungsbetrieb():
 	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
 	freeToMove = 0
 	oldCommand = 'N'
-	stamp=time.time()
+	TimeStamp = 0
+	old_TimeStamp = 0
+
 	while True:
-		stamp2 = time.time()
-		if stamp2 - stamp*1000  >= 50:
+		TimeStamp = time.time()
+		time_dif = TimeStamp - old_TimeStamp
+		if time_dif*1000  >= 50:
 			#stamp5 = time.time()
-			stamp = time.time()
+			old_TimeStamp = TimeStamp
 			#print "attempting to read"
 			command = getStatus()
 			if command == ' ':
@@ -114,7 +117,7 @@ def servoErrorTest():
 		y += 1
 	
 	for x in xrange(1,19):
-	 	print ("Fehleranzahl Servo" + str(x) + " = " + str(error[x]))
+		print ("Fehleranzahl Servo" + str(x) + " = " + str(error[x]))
 	
 def readAllPositions(times=1):
 	#Liest die Positionen aller Servos "times"-mal aus und gibt durschnittliche Zeit und Fehlersumme zurueck.
