@@ -51,11 +51,12 @@ def Fernbedienungsbetrieb():
 	TimeStamp = 0
 	old_TimeStamp = 0
 
+	print ('Fernbedienung gestartet')
+
 	while True:
 		TimeStamp = time.time()
 		time_dif = TimeStamp - old_TimeStamp
-		if time_dif*1000  >= 50:
-			#stamp5 = time.time()
+		if (time_dif*1000)  >= 50:
 			old_TimeStamp = TimeStamp
 			#print "attempting to read"
 			command = getStatus()
@@ -63,7 +64,6 @@ def Fernbedienungsbetrieb():
 				command = oldCommand
 			oldCommand = command
 			freeToMove = 1
-			#print str((time.time()-stamp)*1000)
 		else:
 			
 			if freeToMove == 1 :
@@ -89,7 +89,8 @@ def Fernbedienungsbetrieb():
 					Gait(phi=90)
 					MoveIK(x,y,z,rotx,roty,rotz)
 				if command == "1" :#and servos.getMovingStatus(4) == 0):
-					break
+					print ('beendet ')
+					#break
 				if command == "L" :#and servos.getMovingStatus(4) == 0):
 					oldCommand = "N"
 					gegenstand = packen()
@@ -99,7 +100,7 @@ def Fernbedienungsbetrieb():
 				#if stamp3 != 0:
 				#	print stamp4-stamp3
 
-					
+	print ('Fernbedienung beendet')
 	#end = time.time()
 	#print end-start
 

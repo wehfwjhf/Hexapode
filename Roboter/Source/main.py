@@ -20,6 +20,9 @@ except:
 def ProgrammSelect():
 
 	while 1:
+		print ("Main gestartet")
+		IKfunction.Fernbedienungsbetrieb()
+
 		print ("Hauptmenu")
 		print ("Handbetrieb          = 1")
 		print ("Automatikbetrieb     = 2")
@@ -28,6 +31,8 @@ def ProgrammSelect():
 		if openCVEnabled:
 			print ("blauen Ball finden = 5")
 		print ("Programm beenden = 0")
+
+
 
 		programmSelect = raw_input("\nWelches Programm wollen Sie ausfuehren? \n")
 		if programmSelect == "1":
