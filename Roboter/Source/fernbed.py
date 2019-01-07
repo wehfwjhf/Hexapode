@@ -8,7 +8,7 @@
 #Programm zum Empfangen der Daten ueber die serielle Schnittstelle des XBees
 
 #----------imports--------------
-from time import sleep
+import time
 import serial
 import Adafruit_BBIO.UART as UART
 
@@ -33,7 +33,7 @@ def lesen():
 	while True:
 		if ord(port.read(1)) == 255:
 			break
-	sleep(0.0001)
+	#sleep(0.0001)
 	for j in xrange (7):		
 		reply.append(ord(port.read(1)))
 
@@ -47,7 +47,7 @@ def getStatus():
 	#print ("WaitBytes: " + str(WaitingBytes))
 
 	if WaitingBytes > 50: #RemoteControl is sending 23 Bytes, get two full sequences
-
+		timestart = time.time()
 		WasteBuffer = port.readline() #read until /n, could be only parts of one sequence
 		CheckBuffer = port.read(3) # read the first Bytes in Buffer
 
@@ -110,6 +110,10 @@ def getStatus():
 		# set command
 		command_left = getStickCommand(StickLeftVert,StickLeftHorz)
 		print ('Command: ' + command_left)
+
+		timestop = time.time()
+
+		timediff = timestop - timestart
 		#try:
 			#reply.append(port.read(56))
 			#command= reply[0][0] #asdasd
@@ -117,13 +121,13 @@ def getStatus():
 			#attemptFailed = 1
 			#print ("getStatusFailed")
 	else:
-		command = ' '
+		command_left = ' '
 	#if attemptFailed == 0:
 		#print ("getStatusSuccess")
 
 	
 
-	return command
+	return command_left
 
 def getRightStick():
 	global rightStick

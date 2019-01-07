@@ -10,13 +10,18 @@ from fernbed import *
 from ax12 import Ax12
 import curses
 from IK import *
+import os
 servos = Ax12()
 
+led3_on = 'echo 1 > /sys/class/leds/beaglebone:green:usr3/brightness'
+led3_off = 'echo 0 > /sys/class/leds/beaglebone:green:usr3/brightness'
+led1_on = 'echo 1 > /sys/class/leds/beaglebone:green:usr1/brightness'
+led1_off = 'echo 0 > /sys/class/leds/beaglebone:green:usr1/brightness'
 
 def newAutomatikbetrieb() :
 	#Automatische Vorwaertsbewegung mit Pruefung ob mindestens 10 Servos die Zielposition
 	#erreicht haben, bevor ein neuer Bewegungsbefehl abgesetzt wird.
-	PositionToReach = getLastAngles()	
+	PositionToReach = getLastAngles()
 	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
 	j=0
 	k=0
@@ -48,24 +53,36 @@ def Fernbedienungsbetrieb():
 	global x,y,z,rotx,roty,rotz,GaitPosX,GaitPosY,GaitPosZ
 	freeToMove = 0
 	oldCommand = 'N'
-	TimeStamp = 0
 	old_TimeStamp = 0
+	old_TimeStampLED3 = 0
 
 	print ('Fernbedienung gestartet')
 
 	while True:
 		TimeStamp = time.time()
 		time_dif = TimeStamp - old_TimeStamp
+
+		time_difLED3 = TimeStamp - old_TimeStampLED3
+		if (time_difLED3 * 1000) >= 1000:
+			os.system(led3_off)
+			old_TimeStampLED3 = TimeStamp
+		elif (time_difLED3 * 1000) >= 500:
+			os.system(led3_on)
+
+
 		if (time_dif*1000)  >= 50:
 			old_TimeStamp = TimeStamp
 			#print "attempting to read"
 			command = getStatus()
 			if command == ' ':
 				command = oldCommand
+				os.system(led1_off)
+			else:
+				os.system(led1_on)
 			oldCommand = command
 			freeToMove = 1
+
 		else:
-			
 			if freeToMove == 1 :
 				stamp3 = 0
 				freeToMove = 0
@@ -80,14 +97,17 @@ def Fernbedienungsbetrieb():
 					stamp3 = time.time()
 					Gait(phi=180)
 					MoveIK(x,y,z,rotx,roty,rotz)
+					print ("bewegung nach hinten")
 				if(command == "A" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
 					Gait(phi=270)
 					MoveIK(x,y,z,rotx,roty,rotz)
+					print ("bewegung nach links")
 				if(command == "D" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
 					Gait(phi=90)
 					MoveIK(x,y,z,rotx,roty,rotz)
+					print ("bewegung nach rechts")
 				if command == "1" :#and servos.getMovingStatus(4) == 0):
 					print ('beendet ')
 					#break

@@ -7,7 +7,11 @@
 import IKfunction
 IKfunction.Init2()
 import time
+import os
 openCVEnabled = True
+
+led3_on = 'echo 1 > /sys/class/leds/beaglebone:green:usr3/brightness'
+led3_off = 'echo 0 > /sys/class/leds/beaglebone:green:usr3/brightness'
 
 try:
 	import IKcvfunction
@@ -20,6 +24,7 @@ except:
 def ProgrammSelect():
 
 	while 1:
+		os.system(led3_on)
 		print ("Main gestartet")
 		IKfunction.Fernbedienungsbetrieb()
 
