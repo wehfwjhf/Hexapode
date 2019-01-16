@@ -22,6 +22,8 @@
  Mucked with by KurtE to start toward a new version...
  
  */
+ 
+ #import "math.h"
 
 //=============================================================================
 // Options
@@ -78,6 +80,7 @@ uint8_t g_fLimitRange = false;
 //=============================================================================
 // Analog information
 #define NUMANALOGS    4
+#define NUMSTICKS      2
 word              g_aawRawAnalog[8][NUMANALOGS];              // Keep 8 raw values for each analog input
 word              g_awRawBatAnalog[8];
 word              g_awRawSums[NUMANALOGS];                    // sum of the raw values.
@@ -96,6 +99,17 @@ byte              g_abJoyValsPrev[NUMANALOGS];                // Joystick values
 unsigned long ltime;         // last time we sent data
 
 int iLoopCnt;
+
+int SendRaw = 0;
+float x_value = 0;
+float y_value = 0;
+int StickValues [NUMANALOGS];
+int StickThreshold = 5;
+int Speed[NUMANALOGS];
+int Angle[2*NUMANALOGS];
+float angle_temp = 0;
+int angle_radiant = 0;
+int AngleCase = 0;
 
 void setup(){
   // I init buttons first as my check state of some buttons in other init code to allow special case
@@ -149,41 +163,198 @@ void loop(){
   } 
   else {
 #endif
-    Serial.print((byte)0xff);
-    for (i=0; i < NUMANALOGS; i++)  {
-     Serial.print(F("x"));
-     if (g_abJoyVals[i] < 10)
-     {
-        Serial.print(F("00"));
-        Serial.print((byte)g_abJoyVals[i]);
-     }
-     else if (g_abJoyVals[i] < 100)
-     {
-        Serial.print(F("0"));
-        Serial.print((byte)g_abJoyVals[i]);
-     }
-     else
-     {
-        Serial.print((byte)g_abJoyVals[i]);
-     }
 
-    }
-    Serial.print(F("x"));
-    
-     if (g_bButtons < 10)
-     {
-        Serial.print(F("00"));
-        Serial.println((byte)g_bButtons);
-     }
-     else if (g_bButtons < 100)
-     {
-        Serial.print(F("0"));
-        Serial.println((byte)g_bButtons);
-     }
-     else
-     {
-        Serial.println((byte)g_bButtons);
-     }
+      //Senden der Rohwerte
+      if (SendRaw)
+      {
+          Serial.print((byte)0xff);
+          for (i=0; i < NUMANALOGS; i++)
+		  {
+           Serial.print(F("x"));
+	   WriteSerialFormatSigned (g_abJoyVals[i]);
+          }
+          WriteSerialFormatSigned (g_bButtons);
+	  Serial.println(F("x"));
+      }
+      // Ende Rohwerte
+      else
+      {
+        Serial.print((byte)0xff);
+        
+        for (i=0; i < NUMANALOGS; i++)  
+        {
+          StickValues[i] = g_abJoyVals[i] - 127; //skaliert
+          if ((StickValues[i] >= 0) && (StickValues[i] <= StickThreshold))
+          {
+            StickValues[i] = 0;
+          }
+          else if ((StickValues[i] < 0) && ((-StickValues[i]) <= StickThreshold))
+          {
+            StickValues[i] = 0;
+          }
+	  //WriteSerialFormatSigned (StickValues[i]);
+        }
+        
+        for (i=0; i < NUMSTICKS; i++)
+        {
+          i = 1;
+          x_value = StickValues[(2*i) + 1];
+          y_value = StickValues[2*i];
+          
+          /* Calculate of angle of Stick */
+          if (y_value > 0)
+          {
+            if (x_value > 0) /* Quadrant 1 */
+            {
+              angle_radiant = 1;
+              AngleCase = 1;
+            }
+            else if (x_value < 0) /* Quadrant 2 */
+            {
+              angle_radiant = 1;
+              AngleCase = 2;
+            }
+            else
+            {
+              angle_temp = 90; /* Stick on y-cord positive */
+              angle_radiant = 0;
+              AngleCase = 5;
+            }
+          }
+          else if (y_value < 0)
+          {
+             if (x_value > 0) /* Quadrant 4 */
+            {
+              angle_radiant = 1;
+              AngleCase = 4;
+            }
+            else if (x_value < 0) /* Quadrant 3 */
+            {
+              angle_radiant = 1;
+              AngleCase = 3;
+            }
+            else
+            {
+              angle_temp = 270; /* Stick on y-cord negative */
+              angle_radiant = 0;
+              AngleCase = 6;
+            }
+          }
+          else /* y-value == 0 */
+          {
+            if (x_value < 0)
+            {
+              angle_temp = 180; /* Stick on x-cord negative */
+              angle_radiant = 0;
+              AngleCase = 7;
+            }
+            else /* (x_value > 0) or x_value == 0 */
+            {
+              angle_temp = 0; /* Stick on x-cord positive */
+              angle_radiant = 0;
+              AngleCase = 8;
+            }
+          }
+     
+          if (angle_radiant == 1)
+          {
+            angle_temp = atan (y_value / x_value);
+            angle_temp = (angle_temp * 180) / 3.1416;
+            
+            switch (AngleCase)
+            {
+             case 1:
+             default:
+             {
+               angle_temp = angle_temp;
+               break;
+             }
+             case 2:
+             {
+               angle_temp = (90 + angle_temp) + 90;
+               break;
+             }
+             case 3:
+             {
+               angle_temp = (angle_temp) + 180;
+               break;
+             }
+             case 4:
+             {
+               angle_temp = (90 + angle_temp) + 270;
+               break;
+             }
+            }
+          }
+
+          /* Convert Angle in x-y orientiation to user orientation, */
+          /* so that the stick pressed upwards is an angle of 0°, move forward */
+          if (angle_temp >= 90)
+          {
+            angle_temp = angle_temp - 90;
+          }
+          else if (angle_temp <= 0)
+          {
+            if ((x_value == 0) && (y_value == 0))
+            {
+              angle_temp = 0;
+            }
+            else
+            {
+              angle_temp = 270;
+            }
+          }
+          else
+          {
+            angle_temp = angle_temp + 270;
+          }
+          
+          if (angle_temp > 200) /* Serial print is sending bytes, angle_temp could cause overflow. It will be splitted */
+          {
+            Angle[(2*i)] = 200;
+            Angle[(2*i) + 1] = (int)(angle_temp - 200);
+          }
+          else
+          {
+            Angle[(2*i)] = (int)(angle_temp);
+            Angle[(2*i) + 1] = 0;
+          }
+          
+          /* Problem using pythagoras: pressing the Stick up or sideways will result in sqrt(127^2 + 0^2) = 127 */
+          /* But pressing the Stick diagonal will result in sqrt(127^2 + 127^2) = 179, so the Speed is higher. This is not intutive */
+          //Speed[i] = sqrt( (y_value * y_value) + (x_value * x_value));
+          
+          /* As the Speed, the higher value of x_value or y_value will be used for now*/
+          if (abs(x_value) > abs(y_value))
+          {
+            Speed[i] = abs(x_value);
+          }
+          else
+          {
+            Speed[i] = abs(y_value);
+          }
+          
+//          Serial.print ("x:");
+//          WriteSerialFormat (x_value);
+//          Serial.print ("y:");
+//          WriteSerialFormat (y_value);
+//          Serial.print ("A:");
+//          Serial.print (angle_temp, 2);
+//          Serial.print ("C:");
+//          Serial.println (AngleCase);
+          Serial.print(F("S:"));
+  	  WriteSerialFormat (Speed[i]);
+          Serial.print(F("A1:"));
+  	  WriteSerialFormat (Angle[2*i]);
+          Serial.print(F("A2:"));
+  	  WriteSerialFormat (Angle[(2*i) + 1]);
+        }
+        
+       
+        Serial.print(F("B"));
+        WriteSerialFormat (g_bButtons);
+        Serial.println(F("e"));
+      }
 
     //Serial.print((byte)0);        // extra
     //Serial.println((byte)bChksum);
@@ -191,6 +362,86 @@ void loop(){
   }
 #endif
   delay (FRAME_LEN);
+}
+
+void WriteSerialFormatSigned (int Data)
+{
+  if (Data >= 0)
+  {
+	if (Data < 10)
+	{
+	  Serial.print(F("p00"));
+	  Serial.print((byte)Data);
+	}
+	else if (Data < 100)
+	{
+	  Serial.print(F("p0"));
+	  Serial.print((byte)Data);
+	}
+	else
+	{
+          Serial.print(F("p"));
+	  Serial.print((byte)Data);
+	}
+  }
+  else
+  {
+    Data = abs(Data);
+	if (Data < 10)
+	{
+	  Serial.print(F("n00"));
+	  Serial.print((byte)Data);
+	}
+	else if (Data < 100)
+	{
+	  Serial.print(F("n0"));
+	  Serial.print((byte)Data);
+	}
+	else
+	{
+          Serial.print(F("n"));
+	  Serial.print((byte)Data);
+	}
+  }
+}
+
+void WriteSerialFormat (int Data)
+{
+  if (Data >= 0)
+  {
+	if (Data < 10)
+	{
+	  Serial.print(F("00"));
+	  Serial.print((byte)Data);
+	}
+	else if (Data < 100)
+	{
+	  Serial.print(F("0"));
+	  Serial.print((byte)Data);
+	}
+	else
+	{
+	  Serial.print((byte)Data);
+	}
+  }
+  else
+  {
+    Data = abs(Data);
+	if (Data < 10)
+	{
+	  Serial.print(F("00"));
+	  Serial.print((byte)Data);
+	}
+	else if (Data < 100)
+	{
+	  Serial.print(F("0"));
+	  Serial.print((byte)Data);
+	}
+	else
+	{
+	  Serial.print((byte)Data);
+	}
+  }
 }
 
 //=============================================================================
