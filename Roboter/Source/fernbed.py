@@ -25,8 +25,6 @@ button=[0,0,0,0,0,0,0,0]
 #global RemCtrlBufferError
 RemCtrlBufferError = 0
 
-
-
 def lesen():
 	reply = []
 	port.flushInput()
@@ -42,11 +40,19 @@ def lesen():
 
 def getStatus():
 	global RemCtrlBufferError
+
+	StickRightSpeed = ' '
+	StickRightAngle1 = ' '
+	StickRightAngle2 = ' '
+	StickLeftSpeed = ' '
+	StickLeftAngle1 = ' '
+	StickLeftAngle2 = ' '
+
 	command = 'N'
 	WaitingBytes = port.inWaiting()
 	#print ("WaitBytes: " + str(WaitingBytes))
 
-	if WaitingBytes > 50: #RemoteControl is sending 23 Bytes, get two full sequences
+	if WaitingBytes > 72: #RemoteControl is sending 36 Bytes, get two full sequences
 		timestart = time.time()
 		WasteBuffer = port.readline() #read until /n, could be only parts of one sequence
 		CheckBuffer = port.read(3) # read the first Bytes in Buffer
@@ -56,39 +62,53 @@ def getStatus():
 
 		# Read all values from Buffer
 		if CheckBuffer == '255': #check for intial 0xFF in sequence
-			RemCtrlBuffer = port.read(20) # read the next 20 Bytes, the data, in Buffer
+			RemCtrlBuffer = port.read(33) # read the next 25 Bytes, the data, in Buffer
 			print ("Buffer: " + str(RemCtrlBuffer))
 
-			if RemCtrlBuffer[0] == 'x':
-				StickRightVert = RemCtrlBuffer [1:4]
-				StickRightVert = int(float(StickRightVert))
+			if RemCtrlBuffer[0] == 'S':
+				StickRightSpeed = RemCtrlBuffer [1:4]
+				StickRightSpeed = int(float(StickRightSpeed))
 			else:
-				StickRightVert = ' '
+				StickRightSpeed = ' '
 				print('Buffer corrupted')
 
-			if 	RemCtrlBuffer[4] == 'x':
-				StickRightHorz = RemCtrlBuffer [5:8]
-				StickRightHorz = int(float(StickRightHorz))
+			if 	RemCtrlBuffer[4:6] == 'A1':
+				StickRightAngle1 = RemCtrlBuffer [6:9]
+				StickRightAngle1 = int(float(StickRightAngle1))
 			else:
-				StickRightHorz = ' '
+				StickRightAngle1 = ' '
 				print('Buffer corrupted')
 
-			if RemCtrlBuffer[8] == 'x':
-				StickLeftVert = RemCtrlBuffer [9:12]
-				StickLeftVert = int(float(StickLeftVert))
+			if RemCtrlBuffer[9:11] == 'A2':
+				StickRightAngle2 = RemCtrlBuffer [11:14]
+				StickRightAngle2 = int(float(StickRightAngle2))
 			else:
-				StickLeftVert = ' '
+				StickRightAngle2 = ' '
 				print('Buffer corrupted')
 
-			if RemCtrlBuffer[12] == 'x':
-				StickLeftHorz = RemCtrlBuffer [13:16]
-				StickLeftHorz = int(float(StickLeftHorz))
+			if RemCtrlBuffer[14] == 'S':
+				StickLeftSpeed = RemCtrlBuffer [15:18]
+				StickLeftSpeed = int(float(StickLeftSpeed))
 			else:
-				StickLeftHorz = ' '
+				StickLeftSpeed = ' '
 				print('Buffer corrupted')
 
-			if RemCtrlBuffer[16] == 'x':
-				Buttons = RemCtrlBuffer [17:21]
+			if RemCtrlBuffer[18:20] == 'A1':
+				StickLeftAngle1 = RemCtrlBuffer[20:23]
+				StickLeftAngle1 = int(float(StickLeftAngle1))
+			else:
+				StickLeftAngle1 = ' '
+				print('Buffer corrupted')
+
+			if RemCtrlBuffer[23:25] == 'A2':
+				StickLeftAngle2 = RemCtrlBuffer[25:28]
+				StickLeftAngle2 = int(float(StickLeftAngle2))
+			else:
+				StickLeftAngle2 = ' '
+				print('Buffer corrupted')
+
+			if RemCtrlBuffer[28] == 'B':
+				Buttons = RemCtrlBuffer [29:32]
 				Buttons = int(float(Buttons))
 			else:
 				Buttons = ' '
@@ -101,14 +121,8 @@ def getStatus():
 
 		port.flushInput()
 
-		# Rate the data
-		StickLeftVert = getBoolStick(StickLeftVert)
-		StickLeftHorz = getBoolStick(StickLeftHorz)
-		StickRightVert = getBoolStick(StickRightVert)
-		StickRightHorz = getBoolStick(StickRightHorz)
-
 		# set command
-		command_left = getStickCommand(StickLeftVert,StickLeftHorz)
+		command_left = getStickCommand(StickLeftSpeed , StickLeftAngle1, StickLeftAngle2)
 		print ('Command: ' + command_left)
 
 		timestop = time.time()
@@ -133,29 +147,20 @@ def getRightStick():
 	global rightStick
 	return rightStick
 
-def getBoolStick(value):
-	if value > 200:
-		return 1
-	elif value < 50:
-		return -1
-	else:
-		return 0
 
-def getStickCommand(vert_value, horz_value):
+def getStickCommand(Speed, Angle1, Angle2):
 	ret_val = ' '
-	if horz_value == 0:
-		if vert_value == 1:
-			ret_val = 'W'
-		elif vert_value == -1:
-			ret_val = 'S'
-		else:
-			ret_val = ' '
+	Angle = Angle1 + Angle2
 
-	if vert_value == 0:
-		if horz_value == 1:
-			ret_val = 'D'
-		elif horz_value == -1:
+	if Speed > 0:
+		if Angle == 0:
+			ret_val = 'W'
+		elif Angle == 90:
 			ret_val = 'A'
+		elif Angle == 180:
+			ret_val = 'S'
+		elif Angle == 270:
+			ret_val = 'D'
 		else:
 			ret_val = ' '
 

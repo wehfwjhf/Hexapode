@@ -75,7 +75,7 @@ def Fernbedienungsbetrieb():
 			#print "attempting to read"
 			command = getStatus()
 			if command == ' ':
-				command = oldCommand
+				#command = oldCommand
 				os.system(led1_off)
 			else:
 				os.system(led1_on)
@@ -90,24 +90,24 @@ def Fernbedienungsbetrieb():
 					#stamp3 = time.time()
 					Gait(phi=0)
 					MoveIK(x,y,z,rotx,roty,rotz)
-					print ("bewegung nach vorne")
+					#print ("bewegung nach vorne")
 					#sleep(1) #Beaglebone ist mit print alleine Abgestuerzt
 				
 				if(command == "S" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
 					Gait(phi=180)
 					MoveIK(x,y,z,rotx,roty,rotz)
-					print ("bewegung nach hinten")
+					#print ("bewegung nach hinten")
 				if(command == "A" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
 					Gait(phi=270)
 					MoveIK(x,y,z,rotx,roty,rotz)
-					print ("bewegung nach links")
+					#print ("bewegung nach links")
 				if(command == "D" ):#and servos.getMovingStatus(4) == 0):
 					stamp3 = time.time()
 					Gait(phi=90)
 					MoveIK(x,y,z,rotx,roty,rotz)
-					print ("bewegung nach rechts")
+					#print ("bewegung nach rechts")
 				if command == "1" :#and servos.getMovingStatus(4) == 0):
 					print ('beendet ')
 					#break
