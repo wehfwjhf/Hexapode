@@ -197,7 +197,6 @@ void loop(){
         
         for (i=0; i < NUMSTICKS; i++)
         {
-          i = 1;
           x_value = StickValues[(2*i) + 1];
           y_value = StickValues[2*i];
           
@@ -342,15 +341,14 @@ void loop(){
 //          Serial.print (angle_temp, 2);
 //          Serial.print ("C:");
 //          Serial.println (AngleCase);
-          Serial.print(F("S:"));
+          Serial.print(F("S"));
   	  WriteSerialFormat (Speed[i]);
-          Serial.print(F("A1:"));
+          Serial.print(F("A1"));
   	  WriteSerialFormat (Angle[2*i]);
-          Serial.print(F("A2:"));
+          Serial.print(F("A2"));
   	  WriteSerialFormat (Angle[(2*i) + 1]);
         }
         
-       
         Serial.print(F("B"));
         WriteSerialFormat (g_bButtons);
         Serial.println(F("e"));
